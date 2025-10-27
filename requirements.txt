@@ -1,7 +1,4 @@
 flask
-gunicorn
-openai-whisper
-pydub
 requests
 python-dotenv
 groq

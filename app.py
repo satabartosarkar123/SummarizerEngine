@@ -59,7 +59,7 @@ def create_app() -> Flask:
         if uploaded.filename == "":
             return jsonify({"error": "No audio uploaded"}), 400
 
-        uploads_dir = Path("uploads")
+        uploads_dir = Path(tempfile.gettempdir()) / "uploads"
         uploads_dir.mkdir(parents=True, exist_ok=True)
         target_path = uploads_dir / uploaded.filename
         uploaded.save(target_path)
