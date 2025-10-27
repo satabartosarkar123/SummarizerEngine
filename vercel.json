@@ -3,8 +3,7 @@
     "app.py": {
       "runtime": "python3.11",
       "maxDuration": 60,
-      "memory": 2048,
-      "maxLambdaSize": "150mb"
+      "memory": 2048
     }
   },
   "buildCommand": "./vercel-build.sh",
