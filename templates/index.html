@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meeting Audio Summarizer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎙️ Meeting Audio Summarizer</h1>
+            <p>Upload your audio file to get a transcription and a smart meeting summary.</p>
+        </header>
+        <main>
+            <section class="upload-section">
+                <label class="upload-label" for="audioFile">
+                    <span class="upload-icon">⬆️</span>
+                    <span>Choose or drag your audio file here</span>
+                </label>
+                <input type="file" id="audioFile" accept=".mp3,.wav,.m4a,.ogg,.flac" style="display:none;">
+                <button class="upload-btn" onclick="uploadAndProcess()">Upload & Summarize</button>
+            </section>
+            <section id="result" class="results-section"></section>
+        </main>
+        <footer>
+            <p>Powered by OpenAI Whisper & LangChain | <span class="credit">Made with ❤️</span></p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

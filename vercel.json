@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "app.py": {
+      "runtime": "python3.11",
+      "maxDuration": 60,
+      "memory": 2048,
+      "maxLambdaSize": "150mb"
+    }
+  },
+  "buildCommand": "./vercel-build.sh",
+  "routes": [
+    { "src": "/static/(.*)", "dest": "/static/$1" },
+    { "src": "/(.*)", "dest": "app.py" }
+  ]
+}
