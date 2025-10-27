@@ -50,8 +50,15 @@ def create_app() -> Flask:
 
         return jsonify({"transcript": transcript, "segments": segments, "summary": summary})
 
-    @app.route("/api/process", methods=["POST"])
+    @app.route("/api/process", methods=["GET", "POST"])
     def api_process():
+        if request.method == "GET":
+            return jsonify(
+                {
+                    "message": "Upload audio via POST multipart/form-data with field 'audio' to use this endpoint."
+                }
+            )
+
         if "audio" not in request.files:
             return jsonify({"error": "No audio uploaded"}), 400
 
