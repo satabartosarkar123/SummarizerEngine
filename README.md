@@ -67,3 +67,8 @@ Visit `http://localhost:${PORT:-5055}` for the web UI. Backend endpoints:
 - `/api/process` – upload audio via form-data `audio` to run full transcription + summarization workflow.
 
 The frontend (served at `/`) lets you pick an audio file, sends it to `/api/process`, and renders the resulting summary, transcript, and segments.
+
+## Vercel Deployment Notes
+- Use a project name/slug that meets Vercel’s requirements: lowercase only, digits allowed, and the characters `.`, `_`, `-` (no `---`, max 100 chars). Example: `summarizer-engine`.
+- If deploying via CLI, run `vercel --name summarizer-engine` (and `vercel --prod --name summarizer-engine` for production) to ensure the slug is valid.
+- Configure environment variables in Vercel (`GROQ_API_KEY`, `MISTRAL_API_KEY`, optional model overrides, `FLASK_DEBUG`, `PORT`) for both Preview and Production scopes.
