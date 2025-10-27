@@ -70,5 +70,6 @@ The frontend (served at `/`) lets you pick an audio file, sends it to `/api/proc
 
 ## Vercel Deployment Notes
 - Use a project name/slug that meets Vercel’s requirements: lowercase only, digits allowed, and the characters `.`, `_`, `-` (no `---`, max 100 chars). Example: `summarizer-engine`.
+- Vercel automatically detects the Python runtime from `app.py`, so you do not need a custom `vercel.json`.
 - If deploying via CLI, run `vercel --name summarizer-engine` (and `vercel --prod --name summarizer-engine` for production) to ensure the slug is valid.
 - Configure environment variables in Vercel (`GROQ_API_KEY`, `MISTRAL_API_KEY`, optional model overrides, `FLASK_DEBUG`, `PORT`) for both Preview and Production scopes.
