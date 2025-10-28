@@ -8,7 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 
-from summarizer import summarize_text
+from summarizer import SummarizationServiceUnavailable, summarize_text
 from summarizer.main import summarize_meeting
 from transcribe import transcribe_audio, transcribe_audio_file
 
@@ -47,14 +47,20 @@ def create_app() -> Flask:
             os.unlink(tmp_path)
 
         summary = None
+        summary_error = None
         if request.form.get("summarize") == "true":
             try:
                 summary = summarize_text(transcript)
+            except SummarizationServiceUnavailable as exc:
+                summary_error = str(exc)
+                app.logger.warning("Summarization unavailable in /api/transcribe: %s", exc)
             except Exception as exc:  # pragma: no cover - propagated to client
                 app.logger.exception("Failed to summarize transcript in /api/transcribe")
                 return jsonify({"error": "Failed to summarize transcript", "transcript": transcript}), 500
 
-        return jsonify({"transcript": transcript, "segments": segments, "summary": summary})
+        return jsonify(
+            {"transcript": transcript, "segments": segments, "summary": summary, "summary_error": summary_error}
+        )
 
     @app.route("/api/process", methods=["GET", "POST"])
     def api_process():
@@ -77,9 +83,20 @@ def create_app() -> Flask:
         target_path = uploads_dir / uploaded.filename
         uploaded.save(target_path)
 
+        summary = None
+        summary_error = None
+
         try:
             transcript, segments = transcribe_audio(str(target_path))
+        except Exception as exc:  # pragma: no cover - propagated to client
+            app.logger.exception("Failed to transcribe audio in /api/process")
+            return jsonify({"error": "Failed to process audio upload"}), 500
+
+        try:
             summary = summarize_meeting(transcript)
+        except SummarizationServiceUnavailable as exc:
+            summary_error = str(exc)
+            app.logger.warning("Summarization unavailable in /api/process: %s", exc)
         except Exception as exc:  # pragma: no cover - propagated to client
             app.logger.exception("Failed to process audio upload in /api/process")
             return jsonify({"error": "Failed to process audio upload"}), 500
@@ -92,7 +109,7 @@ def create_app() -> Flask:
                 app.logger.exception("Failed to remove temporary file %s", target_path)
 
         return jsonify(
-            {"transcript": transcript, "segments": segments, "summary": summary}
+            {"transcript": transcript, "segments": segments, "summary": summary, "summary_error": summary_error}
         )
 
     @app.route("/api/summarize", methods=["POST"])
@@ -104,6 +121,9 @@ def create_app() -> Flask:
 
         try:
             summary = summarize_text(text)
+        except SummarizationServiceUnavailable as exc:
+            app.logger.warning("Summarization unavailable in /api/summarize: %s", exc)
+            return jsonify({"error": str(exc)}), 503
         except Exception as exc:  # pragma: no cover - propagated to client
             app.logger.exception("Failed to summarize text in /api/summarize")
             return jsonify({"error": "Failed to summarize text"}), 500

@@ -145,6 +145,16 @@ main {
     margin-bottom: 18px;
 }
 
+.summary-notice {
+    background: #fff8e5;
+    border-left: 4px solid #f0a500;
+    border-radius: 6px;
+    color: #a06900;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
 .summary-body h1,
 .summary-body h2,
 .summary-body h3,

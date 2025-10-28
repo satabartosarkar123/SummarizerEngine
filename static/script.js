@@ -128,7 +128,10 @@ function renderError(message) {
   `;
 }
 
-function renderResult({ summary, transcript, segments }) {
+function renderResult({ summary, transcript, segments, summary_error }) {
+  const notice = summary_error
+    ? `<div class="summary-notice">${escapeHtml(summary_error)}</div>`
+    : "";
   const summaryHtml = `<div class="summary-body">${renderMarkdown(summary)}</div>`;
 
   const transcriptHtml = `<pre>${transcript ? escapeHtml(transcript) : "No transcript available."}</pre>`;
@@ -153,6 +156,7 @@ function renderResult({ summary, transcript, segments }) {
   resultContainer.innerHTML = `
     <div>
       <h2>Summary</h2>
+      ${notice}
       ${summaryHtml}
       <h2>Transcript</h2>
       ${transcriptHtml}
