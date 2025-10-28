@@ -75,8 +75,8 @@ The frontend (served at `/`) lets you pick an audio file, sends it to `/api/proc
 - Configure environment variables in Vercel (`GROQ_API_KEY`, `MISTRAL_API_KEY`, optional model overrides, `FLASK_DEBUG`, `PORT`) for both Preview and Production scopes.
 
 ## Render Deployment Notes
-- Include the `Procfile` in this repo; Render uses it to start Gunicorn bound to `0.0.0.0:${PORT}`.
+- `gunicorn.conf.py` forces Gunicorn to bind to `0.0.0.0:${PORT}` so any start command that launches Gunicorn (e.g. `gunicorn app:app`) will satisfy Render’s port check.
 - Do **not** set a manual `PORT` environment variable on Render—the platform injects it automatically.
 - Build command: `pip install -r requirements.txt`
-- Start command (if you need to enter it): `gunicorn -b 0.0.0.0:${PORT:-5055} app:app`
+- Start command (if you need to enter it): `gunicorn app:app` (the config file adds the bind flag for you)
 - Add the same secrets (`GROQ_API_KEY`, `MISTRAL_API_KEY`, etc.) under the service’s Environment tab.
